@@ -74,37 +74,6 @@
     100%{transform:translateX(2%) translateY(1%)}
   }
 
-  .bat{
-    position:absolute;
-    width:28px; height:12px;
-    background:linear-gradient(90deg, transparent 35%, #111 35% 65%, transparent 65%);
-    top:16vh; left:-5vw;
-    opacity:.8;
-    animation:fly 16s linear infinite;
-  }
-  .bat:before, .bat:after{
-    content:"";
-    position:absolute; top:0;
-    width:14px; height:12px; background:#111;
-    border-radius:0 100% 0 100% / 0 100% 0 100%;
-    transform-origin: right center;
-    animation:flap .3s ease-in-out infinite;
-  }
-  .bat:before{ left:-14px; transform-origin:left center; border-radius:100% 0 100% 0 / 100% 0 100% 0; }
-  .bat:after{ right:-14px; }
-  @keyframes flap{
-    0%,100%{transform:rotate(12deg)}
-    50%{transform:rotate(-22deg)}
-  }
-  @keyframes fly{
-    0%{ transform:translateX(0) translateY(0) scale(1) }
-    50%{ transform:translateX(60vw) translateY(-6vh) scale(1.1) }
-    100%{ transform:translateX(120vw) translateY(2vh) scale(1) }
-  }
-  .bat.b2{ top:22vh; animation-duration:18s; animation-delay:2s; opacity:.7; }
-  .bat.b3{ top:28vh; animation-duration:20s; animation-delay:5s; opacity:.6; }
-  .bat.b4{ top:14vh; animation-duration:22s; animation-delay:7s; opacity:.5; }
-
   .arch-wrap{
     position:absolute; top:18px; left:50%; transform:translateX(-50%);
     width:min(1000px, 94vw);
@@ -142,22 +111,6 @@
     box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 10px 16px rgba(0,0,0,.4);
     overflow:hidden;
   }
-  .stone:before{
-    content:"";
-    position:absolute; left:50%; top:-40%;
-    width: 160%; height: 120%;
-    transform: translateX(-50%);
-    border-radius: 999px 999px 0 0 / 100% 100% 0 0;
-    background: radial-gradient(120% 120% at 50% 20%, #e2e7ef 0 45%, #c6cdd8 60%, transparent 61%);
-    opacity:.25; pointer-events:none;
-  }
-  .stone h2{
-    font-family: "Cinzel", Georgia, serif;
-    margin:8px 0 6px; color:#222a38;
-    text-shadow: 0 1px 0 rgba(255,255,255,.4);
-    letter-spacing:.05em;
-  }
-  .stone small{color:#2d3748}
 
   label{display:block; font-size:.9rem; color:#2d3a4d; margin:10px 0 6px}
   .input{
@@ -168,163 +121,95 @@
     background: linear-gradient(180deg, #f0f3f9, #e1e6ef);
     color:#0d1524; font-size:1.05rem; font-weight:700;
     text-transform:capitalize; letter-spacing:.03em;
-    box-shadow: inset 0 2px 0 rgba(255,255,255,.6);
-  }
-  .input::placeholder{color:#6b7280; font-weight:500}
-  .controls{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-  .btn{
-    appearance:none; border:0; cursor:pointer;
-    padding:12px 14px; border-radius:10px; font-weight:700;
-    transition:transform .05s ease, box-shadow .2s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,.25);
-    background:var(--btn); color:white;
-  }
-  .btn:active{transform:translateY(1px)}
-  .btn.secondary{background:var(--btn-dark); color:#e5e7eb}
-  .select{
-    width:100%; padding:10px 10px; border-radius:10px; border:1.5px solid #5f6c81;
-    background:#111827; color:#e5edf7;
   }
 
-  /* updated result box and text */
   .result{
     padding:16px; border-radius:14px;
-    background: #f3f6fb;                 /* lighter background */
+    background:#f3f6fb;
     border:1px solid rgba(0,0,0,.08);
     min-height:120px;
   }
+
   .fate-text{
-    color:#0b1322;
+    color:#000;
     font-weight:800;
-    font-size:1.15rem;
-    line-height:1.35;
+    font-size:1.2rem;
+    line-height:1.4;
   }
 
-  .muted{color:var(--muted); font-size:.92rem}
-  .tiny{font-size:.82rem; color:#8ea0b8}
-
-  .panel{
-    background: rgba(255,255,255,.035);
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:14px; padding:16px;
+  .btn{
+    appearance:none; border:0; cursor:pointer;
+    padding:12px 14px; border-radius:10px; font-weight:700;
+    transition:transform .05s ease;
+    background:var(--btn); color:white;
   }
-  .panel h3{ margin:0 0 10px; font-family:"Cinzel", Georgia, serif; letter-spacing:.03em; }
-
-  :focus-visible{outline:2px dashed #a5b4fc; outline-offset:3px}
-
-  .audio-row{ display:flex; gap:10px; margin-top:10px; align-items:center; }
+  .btn.secondary{background:var(--btn-dark);}
 </style>
 </head>
 <body>
-  <div class="scene" role="application" aria-labelledby="title">
-    <div class="hills" aria-hidden="true"></div>
-    <div class="fog" aria-hidden="true"></div>
-    <div class="bat"></div><div class="bat b2"></div><div class="bat b3"></div><div class="bat b4"></div>
+  <div class="scene">
+    <div class="hills"></div>
+    <div class="fog"></div>
 
-    <div class="arch-wrap" aria-hidden="true">
-      <svg viewBox="0 0 1200 260" width="100%" role="img" aria-label="Stone arch">
-        <defs>
-          <linearGradient id="archGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#d8dee9"/>
-            <stop offset="100%" stop-color="#b3bccb"/>
-          </linearGradient>
-          <filter id="archShadow" x="-10%" y="-10%" width="120%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.55)"/>
-          </filter>
-        </defs>
-        <path d="M80,240 L1120,240 L1120,180 A520,520 0 0,0 80,180 Z"
-              fill="url(#archGrad)" stroke="#d2dae6" stroke-width="10" filter="url(#archShadow)"/>
-        <path d="M130,200 A470,470 0 0,1 1070,200" fill="none" stroke="#9aa3b2" stroke-width="3" opacity=".7"/>
-        <path d="M100,220 A500,500 0 0,1 1100,220" fill="none" stroke="#9aa3b2" stroke-width="3" opacity=".5"/>
-      </svg>
-      <div class="arch-text" id="title">COMPLIANCE CEMETERY</div>
+    <div class="arch-wrap">
+      <div class="arch-text">COMPLIANCE CEMETERY</div>
     </div>
 
     <div class="card">
       <section class="stone">
         <h2>Here Lies…</h2>
-        <small class="tiny">Type a name to etch on the stone.</small>
         <label for="name">Name on the headstone</label>
-        <input id="name" class="input" type="text" placeholder="e.g., Pat Morgan" autocomplete="name" />
+        <input id="name" class="input" type="text" placeholder="e.g., Pat Morgan" />
         <label for="category" style="margin-top:12px">Choose a theme (optional)</label>
-        <select id="category" class="select">
-          <option value="any">Surprise me (any theme)</option>
+        <select id="category" class="input">
+          <option value="any">Surprise me</option>
           <option value="Office">Office & Conduct</option>
-          <option value="Security">Cybersecurity & IT</option>
+          <option value="Security">Cybersecurity</option>
           <option value="FCC">Telecom & FCC</option>
           <option value="CPNI">CPNI & Privacy</option>
           <option value="OFAC">Sanctions / OFAC</option>
-          <option value="Contract">Contracts & Deal Docs</option>
+          <option value="Contract">Contracts</option>
         </select>
-        <div class="controls">
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
           <button id="reveal" class="btn">Reveal My Fate</button>
           <button id="again" class="btn secondary">Try Again</button>
           <button id="copy" class="btn secondary">Copy</button>
-          <button id="tweet" class="btn secondary">Tweet</button>
-        </div>
-        <div class="audio-row">
-          <button id="audioToggle" class="btn secondary">Play Ambience</button>
-          <span class="tiny">Optional: gentle wind, creaks, and crows (no autoplay).</span>
         </div>
         <div id="result" class="result" style="margin-top:12px" aria-live="polite"></div>
-        <div class="tiny" style="margin-top:8px">This is for laughs only. Keep it kind. No real predictions, no bullying.</div>
       </section>
 
-      <aside class="panel">
+      <aside class="stone" style="background:#e5e9f2;color:#111;">
         <h3>Welcome, Traveler</h3>
-        <p class="muted">Scan the QR, type your name into the headstone, and behold a playful epitaph about workplace mischief — non-graphic and HR-friendly.</p>
-        <ul class="tiny" style="margin-top:10px;line-height:1.5">
-          <li>Names stay local — nothing is stored.</li>
-          <li>Pick a theme or let fate decide.</li>
-          <li>Prefer silence? Leave ambience off.</li>
-        </ul>
+        <p>Scan the QR, type your name, and behold a playful epitaph about workplace mischief — HR-friendly and darkly funny.</p>
       </aside>
     </div>
   </div>
 
-<audio id="ambience" loop preload="auto"></audio>
-
 <script>
-const FATES = []; // (Your 44-item array here — unchanged from before)
+const FATES=[{category:"Office",text:"{name} broke the sacred code of confidentiality by forwarding a restricted file. They were last seen sinking into the Recycle Bin of Eternal NDA Violations."},
+{category:"Security",text:"{name} shared their password like candy on Halloween. Two-Factor Authentication came for them personally — twice."}];
 
-const $ = s => document.querySelector(s);
-function pickFate(cat){
-  const pool = cat==="any"?FATES:FATES.filter(f=>f.category===cat);
-  return pool[Math.floor(Math.random()*pool.length)];
-}
+const $=s=>document.querySelector(s);
+function pickFate(cat){const pool=cat==="any"?FATES:FATES.filter(f=>f.category===cat);return pool[Math.floor(Math.random()*pool.length)];}
 function sanitize(s){return String(s).replace(/[<>]/g,'');}
-
-const nameInput=$("#name"),catSel=$("#category"),btnReveal=$("#reveal"),btnAgain=$("#again"),
-btnCopy=$("#copy"),btnTweet=$("#tweet"),result=$("#result");
+const nameInput=$("#name"),catSel=$("#category"),btnReveal=$("#reveal"),btnAgain=$("#again"),btnCopy=$("#copy"),result=$("#result");
 
 function renderFate(){
-  const name=sanitize(nameInput.value.trim()||"Somebody"),
-        cat=catSel.value,
-        f=pickFate(cat);
-  const txt=f.text.replaceAll("{name}",name);
+  const name=sanitize(nameInput.value.trim()||"Somebody");
+  const cat=catSel.value;
+  const fate=pickFate(cat);
+  const txt=fate.text.replaceAll("{name}",name);
   result.innerHTML=`<strong>${name}:</strong> <span class="fate-text">${txt}</span>
-  <div class="tiny" style="margin-top:8px">Theme: ${f.category}</div>`;
+  <div style="margin-top:8px;font-size:.8rem;color:#555">Theme: ${fate.category}</div>`;
 }
 btnReveal.onclick=renderFate;
 btnAgain.onclick=()=>{renderFate();nameInput.focus();};
 btnCopy.onclick=async()=>{
   try{await navigator.clipboard.writeText(result.innerText.trim());
       btnCopy.textContent="Copied!";setTimeout(()=>btnCopy.textContent="Copy",1200);}
-  catch{btnCopy.textContent="Couldn’t copy";setTimeout(()=>btnCopy.textContent="Copy",1200);}
+  catch{btnCopy.textContent="Error";setTimeout(()=>btnCopy.textContent="Copy",1200);}
 };
-btnTweet.onclick=()=>{
-  const t=encodeURIComponent(result.innerText.trim()||"My spooky compliance fate!");
-  window.open(`https://twitter.com/intent/tweet?text=${t}`,"_blank","noopener");
-};
-nameInput.onkeydown=e=>{if(e.key==="Enter")renderFate();};
 setTimeout(()=>{if(!result.innerText.trim())renderFate();},400);
-
-/* Ambience */
-const audio=document.getElementById("ambience");
-const audioToggle=document.getElementById("audioToggle");
-let loaded=false;
-const src="ambience.mp3";
-fetch(src,{method:"HEAD"}).then(r=>{if(r.ok){audio.src=src;loaded=true;}}).catch(()=>{});
-audioToggle.onclick=async()=>{
-  if(!loaded){audioToggle.textContent="No Audio Found";setTimeout(()=>audioToggle.textContent="Play Ambience",1200);return;}
-  if(audio.paused
+</script>
+</body>
+</html>
