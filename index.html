@@ -4,212 +4,389 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Compliance Cemetery</title>
-<meta name="description" content="Scan, type your name on the headstone, and receive a spooky, HR-friendly compliance epitaph." />
+<meta name="description" content="Scan the QR code, enter your name on the headstone, and reveal your workplace compliance fate… if you dare." />
 <style>
-  :root{
-    --sky-top:#0b1220;
-    --sky-bottom:#1a243b;
-    --moon:#e6edf7;
-    --fog:rgba(255,255,255,0.05);
-    --stone:#c9cfd9;
-    --stone-dark:#9aa3b2;
-    --arch:#cfd6e2;
-    --arch-shadow:#9aa3b2;
-    --text:#eaf0f8;
-    --muted:#b9c4d6;
-    --btn:#3b82f6;
-    --btn-dark:#1f2937;
+  :root {
+    --sky-top: #0b1220;
+    --sky-bottom: #1a243b;
+    --moon: #e6edf7;
+    --fog: rgba(255,255,255,0.05);
+    --stone: #c9cfd9;
+    --stone-dark: #9aa3b2;
+    --arch: #cfd6e2;
+    --arch-shadow: #9aa3b2;
+    --btn: #3b82f6;
+    --btn-dark: #1f2937;
+    --text-dark: #0b1322;
   }
-
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    color:var(--text);
-    font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial;
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: white;
     background:
       radial-gradient(140px 140px at 20% 18%, var(--moon) 0 35%, transparent 36%),
       linear-gradient(0deg, var(--sky-bottom), var(--sky-top));
-    overflow-x:hidden;
+    overflow-x: hidden;
   }
-
-  .scene{
-    position:relative;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:64px 20px 100px;
-    isolation:isolate;
+  .scene {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px 100px;
+    isolation: isolate;
   }
-
-  .hills, .hills:before, .hills:after{
-    content:"";
-    position:absolute;
-    left:-10vw; right:-10vw;
-    height:35vh;
-    bottom:0;
+  .hills, .hills:before, .hills:after {
+    content: "";
+    position: absolute;
+    left: -10vw; right: -10vw;
+    height: 35vh;
+    bottom: 0;
     background:
       radial-gradient(120vw 40vh at 20% 100%, #0a0f1c 50%, transparent 51%),
       radial-gradient(120vw 40vh at 80% 100%, #0a0f1c 50%, transparent 51%),
       radial-gradient(160vw 50vh at 50% 100%, #0b1322 52%, transparent 53%);
-    z-index:-2;
-    filter:blur(1px);
+    z-index: -2;
+    filter: blur(1px);
   }
-  .hills:before{ bottom:6vh; opacity:.8; filter:blur(2px); }
-  .hills:after{ bottom:12vh; opacity:.6; filter:blur(3px); }
-
-  .fog{
-    position:absolute; inset:0;
+  .hills:before {
+    bottom: 6vh; opacity: .8; filter: blur(2px);
+  }
+  .hills:after {
+    bottom: 12vh; opacity: .6; filter: blur(3px);
+  }
+  .fog {
+    position: absolute; inset: 0;
     background:
       radial-gradient(60% 30% at 50% 70%, var(--fog), transparent 70%),
       radial-gradient(50% 25% at 30% 80%, var(--fog), transparent 70%),
       radial-gradient(50% 25% at 70% 85%, var(--fog), transparent 70%);
-    mix-blend-mode:screen;
-    animation:fogmove 18s linear infinite alternate;
-    z-index:-1;
+    mix-blend-mode: screen;
+    animation: fogmove 18s linear infinite alternate;
+    z-index: -1;
   }
-  @keyframes fogmove{
-    0%{transform:translateX(-2%) translateY(0)}
-    100%{transform:translateX(2%) translateY(1%)}
+  @keyframes fogmove {
+    0% { transform: translateX(-2%) translateY(0); }
+    100% { transform: translateX(2%) translateY(1%); }
   }
-
-  .arch-wrap{
-    position:absolute; top:18px; left:50%; transform:translateX(-50%);
-    width:min(1000px, 94vw);
-    pointer-events:none;
-    filter: drop-shadow(0 12px 24px rgba(0,0,0,.5));
+  .arch-wrap {
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    width: min(1000px, 94vw);
+    pointer-events: none;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.5));
   }
-  .arch-text{
-    position:absolute; inset:0;
-    display:flex; align-items:flex-start; justify-content:center;
+  .arch-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-start; justify-content: center;
     padding-top: clamp(28px, 7vw, 64px);
-    font-family:"Cinzel","Trajan Pro",Georgia,serif;
-    letter-spacing:.22em; font-weight:900; color:#eef3fb;
-    text-shadow:0 2px 0 #9aa6b8, 0 6px 18px rgba(0,0,0,.6);
+    font-family: "Cinzel", "Trajan Pro", Georgia, serif;
+    letter-spacing: .22em; font-weight: 900;
+    color: #eef3fb; text-shadow: 0 2px 0 #9aa6b8, 0 6px 18px rgba(0,0,0,0.6);
     font-size: clamp(18px, 3.2vw, 36px);
+    user-select: none;
   }
-
-  .card{
-    width:min(980px, 96vw);
-    display:grid; grid-template-columns: 1.2fr .8fr; gap:18px;
-    padding:18px;
+  .card {
+    width: min(980px, 96vw);
+    display: grid; grid-template-columns: 1.2fr .8fr;
+    gap: 18px; padding: 18px;
     background: linear-gradient(180deg, rgba(14,20,34,.85), rgba(10,15,25,.85));
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:18px;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 18px;
     box-shadow: 0 12px 40px rgba(0,0,0,.5);
     backdrop-filter: blur(6px);
   }
-  @media (max-width: 860px){ .card{ grid-template-columns:1fr; gap:14px; } }
-
-  .stone{
-    position:relative;
+  @media (max-width: 860px) {
+    .card { grid-template-columns: 1fr; gap: 14px; }
+  }
+  .stone {
+    position: relative;
     background: radial-gradient(120% 140% at 50% 0%, var(--stone) 0 60%, var(--stone-dark) 75%);
     border-radius: 18px 18px 8px 8px;
     padding: 20px 16px 18px;
     border: 2px solid rgba(0,0,0,.25);
     box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 10px 16px rgba(0,0,0,.4);
-    overflow:hidden;
+    overflow: hidden;
+    color: var(--text-dark);
   }
-
-  label{display:block; font-size:.9rem; color:#2d3a4d; margin:10px 0 6px}
-  .input{
-    display:block; width:100%;
-    padding:14px 12px;
-    border-radius:10px;
-    border:1.5px solid #6d7b90;
+  .stone h2 {
+    font-family: "Cinzel", Georgia, serif;
+    margin: 8px 0 6px;
+    color: var(--text-dark);
+    text-shadow: 0 1px 0 rgba(255,255,255,.4);
+    letter-spacing: .05em;
+  }
+  .stone small {
+    color: #2d3748;
+  }
+  label {
+    display: block; font-size: .9rem; color: #2d3a4d; margin: 10px 0 6px;
+  }
+  .input {
+    display: block; width: 100%;
+    padding: 14px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #6d7b90;
     background: linear-gradient(180deg, #f0f3f9, #e1e6ef);
-    color:#0d1524; font-size:1.05rem; font-weight:700;
-    text-transform:capitalize; letter-spacing:.03em;
+    color: #0d1524;
+    font-size: 1.05rem; font-weight: 700;
+    text-transform: capitalize; letter-spacing: .03em;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.6);
   }
-
-  .result{
-    padding:16px; border-radius:14px;
-    background:#f3f6fb;
-    border:1px solid rgba(0,0,0,.08);
-    min-height:120px;
+  .input::placeholder {
+    color: #6b7280; font-weight: 500;
   }
-
-  .fate-text{
-    color:#000;
-    font-weight:800;
-    font-size:1.2rem;
-    line-height:1.4;
+  .controls {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
   }
-
-  .btn{
-    appearance:none; border:0; cursor:pointer;
-    padding:12px 14px; border-radius:10px; font-weight:700;
-    transition:transform .05s ease;
-    background:var(--btn); color:white;
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    padding: 12px 14px; border-radius: 10px; font-weight: 700;
+    transition: transform .05s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    background: var(--btn); color: white;
   }
-  .btn.secondary{background:var(--btn-dark);}
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn.secondary {
+    background: var(--btn-dark); color: #e5e7eb;
+  }
+  .select {
+    width: 100%; padding: 10px 10px; border-radius: 10px;
+    border: 1.5px solid #5f6c81; background: #111827; color: #e5edf7;
+  }
+  .result {
+    padding: 16px; border-radius: 14px;
+    background: #f3f6fb; /* light background so dark text shows */
+    border: 1px solid rgba(0,0,0,.08);
+    min-height: 120px;
+    color: var(--text-dark);
+  }
+  .fate-text {
+    color: var(--text-dark);
+    font-weight: 800;
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+  .muted {
+    color: #b9c4d6; font-size: .92rem;
+  }
+  .tiny {
+    font-size: .82rem; color: #8ea0b8;
+  }
+  .panel {
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 14px; padding: 16px;
+    color: var(--text-dark);
+  }
+  .panel h3 {
+    margin: 0 0 10px; font-family: "Cinzel", Georgia, serif; letter-spacing: .03em;
+  }
+  :focus-visible {
+    outline: 2px dashed #a5b4fc; outline-offset: 3px;
+  }
+  .audio-row {
+    display: flex; gap: 10px; margin-top: 10px; align-items: center;
+  }
 </style>
 </head>
 <body>
   <div class="scene">
-    <div class="hills"></div>
-    <div class="fog"></div>
-
-    <div class="arch-wrap">
+    <div class="hills" aria-hidden="true"></div>
+    <div class="fog" aria-hidden="true"></div>
+    <div class="arch-wrap" aria-hidden="true">
+      <svg viewBox="0 0 1200 260" width="100%" role="img" aria-label="Stone arch">
+        <defs>
+          <linearGradient id="archGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d8dee9" />
+            <stop offset="100%" stop-color="#b3bccb" />
+          </linearGradient>
+          <filter id="archShadow" x="-10%" y="-10%" width="120%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.55)" />
+          </filter>
+        </defs>
+        <path d="M80,240 L1120,240 L1120,180 A520,520 0 0,0 80,180 Z"
+              fill="url(#archGrad)" stroke="#d2dae6" stroke-width="10" filter="url(#archShadow)" />
+        <path d="M130,200 A470,470 0 0,1 1070,200" fill="none" stroke="#9aa3b2" stroke-width="3" opacity=".7" />
+        <path d="M100,220 A500,500 0 0,1 1100,220" fill="none" stroke="#9aa3b2" stroke-width="3" opacity=".5" />
+      </svg>
       <div class="arch-text">COMPLIANCE CEMETERY</div>
     </div>
 
     <div class="card">
       <section class="stone">
-        <h2>Here Lies…</h2>
+        <h2>Enter your name here to reveal your fate… if you dare.</h2>
         <label for="name">Name on the headstone</label>
-        <input id="name" class="input" type="text" placeholder="e.g., Pat Morgan" />
+        <input id="name" class="input" type="text" placeholder="Type your name..." />
         <label for="category" style="margin-top:12px">Choose a theme (optional)</label>
-        <select id="category" class="input">
-          <option value="any">Surprise me</option>
+        <select id="category" class="select">
+          <option value="any">Surprise me (any theme)</option>
           <option value="Office">Office & Conduct</option>
-          <option value="Security">Cybersecurity</option>
+          <option value="Security">Cybersecurity & IT</option>
           <option value="FCC">Telecom & FCC</option>
           <option value="CPNI">CPNI & Privacy</option>
           <option value="OFAC">Sanctions / OFAC</option>
-          <option value="Contract">Contracts</option>
+          <option value="Contract">Contracts & Deal Docs</option>
         </select>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <div class="controls">
           <button id="reveal" class="btn">Reveal My Fate</button>
-          <button id="again" class="btn secondary">Try Again</button>
+          <button id="again" class="btn secondary" style="display:none;">Change My Fate</button>
           <button id="copy" class="btn secondary">Copy</button>
+          <button id="tweet" class="btn secondary">Tweet</button>
+        </div>
+        <div class="audio-row">
+          <button id="audioToggle" class="btn secondary" aria-pressed="false">Play Ambience</button>
+          <span class="tiny">Optional: gentle wind, creaks & distant crows (no autoplay)</span>
         </div>
         <div id="result" class="result" style="margin-top:12px" aria-live="polite"></div>
+        <div class="tiny" style="margin-top:8px">This is a joke. No real predictions. Keep it kind.</div>
       </section>
 
-      <aside class="stone" style="background:#e5e9f2;color:#111;">
+      <aside class="panel">
         <h3>Welcome, Traveler</h3>
-        <p>Scan the QR, type your name, and behold a playful epitaph about workplace mischief — HR-friendly and darkly funny.</p>
+        <p>Scan the QR code, enter your name on the headstone, and receive your very own workplace fate. Easy. Fun. HR-friendly.</p>
+        <ul class="tiny" style="margin-top:10px; line-height:1.5;">
+          <li>Your name is only used locally in your browser – nothing is stored.</li>
+          <li>Pick a theme or let fate choose.</li>
+          <li>If you prefer silence, just skip the ambience.</li>
+        </ul>
+        <div class="muted tiny" style="margin-top:8px;">Tip: Print a sign that says “Opt-out anytime. It’s just for fun.”</div>
       </aside>
     </div>
   </div>
 
-<script>
-const FATES=[{category:"Office",text:"{name} broke the sacred code of confidentiality by forwarding a restricted file. They were last seen sinking into the Recycle Bin of Eternal NDA Violations."},
-{category:"Security",text:"{name} shared their password like candy on Halloween. Two-Factor Authentication came for them personally — twice."}];
+  <audio id="ambience" loop preload="auto"></audio>
 
-const $=s=>document.querySelector(s);
-function pickFate(cat){const pool=cat==="any"?FATES:FATES.filter(f=>f.category===cat);return pool[Math.floor(Math.random()*pool.length)];}
-function sanitize(s){return String(s).replace(/[<>]/g,'');}
-const nameInput=$("#name"),catSel=$("#category"),btnReveal=$("#reveal"),btnAgain=$("#again"),btnCopy=$("#copy"),result=$("#result");
+  <script>
+    const FATES = [
+      {category:"Office", text:"{name} broke the sacred code of confidentiality by forwarding a restricted file. They were last seen sinking into the Recycle Bin of Eternal NDA Violations."},
+      {category:"Security", text:"{name} shared their password like candy on Halloween. Two-Factor Authentication came for them personally — twice."},
+      {category:"Office", text:"{name} angered the printer spirits one jam too many. They were pressed, folded, and stapled into legend."},
+      {category:"Security", text:"{name} let security alerts pile up until the notifications formed a landslide. They were buried alive under unread warnings marked “High Severity.”"},
+      {category:"Office", text:"{name} took someone else’s lunch and met poetic justice. Their soul now guards the break-room fridge, dwelling with the mold."},
+      {category:"Office", text:"{name} never managed to arrive on time. The 9:00 a.m. meeting finally swallowed them whole at 9:07."},
+      {category:"Security", text:"{name} joined a coffee shop Wi-Fi with company data. Their spirit was uploaded — unencrypted — to the Cloud of Regret."},
+      {category:"Security", text:"{name} clicked the forbidden link. Now they wander the endless halls of “Mandatory Phishing Training.”"},
+      {category:"Security", text:"{name} bypassed code review to save time. The deployment gods rolled them back to Version 0.0.1."},
+      {category:"Security", text:"{name} left their laptop unlocked during lunch. IT sealed their fate — and their hard drive — with one keystroke."},
+      {category:"CPNI", text:"{name} tossed confidential papers straight into the trash. The Great Office Shredder reclaimed what the bin could not."},
+      {category:"Security", text:"{name} installed forbidden apps on a work phone. The device exiled them to the eternal loading screen of Compliance Updates."},
+      {category:"Security", text:"{name} waved in a “visitor” without a badge. They now haunt the lobby, politely reminding everyone to sign in."},
+      {category:"Security", text:"{name} thought a sticky note made a fine password manager. That note became their headstone — and the Wi-Fi key was never found."},
+      {category:"Office", text:"{name} hit “Reply All” with secrets meant for one. The servers wept, and the echo of that message still pings at midnight."},
+      {category:"Security", text:"{name} noticed a data breach… and said nothing. The silence consumed them, ticket #∞ left eternally “In Progress.”"},
+      {category:"Office", text:"{name} skipped the approval chain to “save a few minutes.” They now rest beneath a granite slab engraved “Pending Supervisor Signature.”"},
+      {category:"Security", text:"{name} trusted a free cloud app with confidential files. The wind carried them away — synced, but never recovered."},
+      {category:"Office", text:"{name} ghosted the annual compliance course. They were automatically re-enrolled… forever."},
+      {category:"Security", text:"{name} plugged in a mysterious USB drive labeled “Totally Safe.” They became the museum exhibit titled “Curiosity Killed the Server.”"},
+      {category:"CPNI", text:"{name} discussed client secrets at lunch. Their whisper lives on as a post-it that hisses, “That’s confidential.”"},
+      {category:"OFAC", text:"{name} tried to onboard a sanctioned entity without screening. They vanished into the Treasury’s most exclusive list — permanently."},
+      {category:"OFAC", text:"{name} forgot to check the Denied Persons List before making a deal. Now they reside in a place even OFAC calls “restricted territory.”"},
+      {category:"CPNI", text:"{name} disclosed customer call data without authorization. The ghost of CPNI appeared, whispering, “That information is privileged.”"},
+      {category:"CPNI", text:"{name} left a list of customer phone records on the copier. Now they haunt the break room, eternally muttering, “Protect the CPNI.”"},
+      {category:"FCC", text:"{name} shared confidential subscriber info over an unsecured channel. The FCC summoned them to the spectral hearing of “In re: Oops vs. The Public Interest.”"},
+      {category:"FCC", text:"{name} failed to post a required FCC notice. They’re now tuned forever to static — channel “Compliance 404.”"},
+      {category:"FCC", text:"{name} advertised unlimited service with very limited truth. The FCC fined their mortal coil and annexed their eternal bandwidth."},
+      {category:"FCC", text:"{name} mishandled a lawful intercept request. Now they linger on hold, waiting for supervisory approval that never comes."},
+      {category:"FCC", text:"{name} forgot to file a Form 477 report. They are now permanently classified as “non-responsive.”"},
+      {category:"FCC", text:"{name} promised “nationwide coverage” that ended at the county line. Their spirit roams the dead zones between marketing and reality."},
+      {category:"Contract", text:"{name} breached a vendor contract by “forgetting” to pay on time. The Accounts Payable Reaper collected — with interest."},
+      {category:"Contract", text:"{name} failed to deliver per the service agreement. The epitaph reads, “Best Efforts Were Not Enough.”"},
+      {category:"Contract", text:"{name} ignored the indemnity clause and learned negligence the hard way. They now serve as Exhibit A in every training about risk allocation."},
+      {category:"Contract", text:"{name} promised performance “to the best of their ability.” Their ability filed for bankruptcy shortly thereafter."},
+      {category:"Contract", text:"{name} accepted terms they never read. They’re now eternally bound by Section 9.2 — “Perpetual Obligations.”"},
+      {category:"Contract", text:"{name} missed a renewal deadline. The contract auto-renewed their afterlife for another five years."},
+      {category:"Contract", text:"{name} signed without legal review. Their ghost roams the office wailing, “Where was counsel?”"},
+      {category:"Contract", text:"{name} redlined the wrong version of the agreement. Their soul is trapped between Track Changes and “Final-Final-v3.docx.”"},
+      {category:"Contract", text:"{name} failed to deliver notice in writing. Their oral agreements echo faintly — admissible nowhere."}
+    ];
 
-function renderFate(){
-  const name=sanitize(nameInput.value.trim()||"Somebody");
-  const cat=catSel.value;
-  const fate=pickFate(cat);
-  const txt=fate.text.replaceAll("{name}",name);
-  result.innerHTML=`<strong>${name}:</strong> <span class="fate-text">${txt}</span>
-  <div style="margin-top:8px;font-size:.8rem;color:#555">Theme: ${fate.category}</div>`;
-}
-btnReveal.onclick=renderFate;
-btnAgain.onclick=()=>{renderFate();nameInput.focus();};
-btnCopy.onclick=async()=>{
-  try{await navigator.clipboard.writeText(result.innerText.trim());
-      btnCopy.textContent="Copied!";setTimeout(()=>btnCopy.textContent="Copy",1200);}
-  catch{btnCopy.textContent="Error";setTimeout(()=>btnCopy.textContent="Copy",1200);}
-};
-setTimeout(()=>{if(!result.innerText.trim())renderFate();},400);
-</script>
+    const $ = sel => document.querySelector(sel);
+    function pickFate(cat) {
+      const pool = cat === "any" ? FATES : FATES.filter(f => f.category === cat);
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+    function sanitize(str) {
+      return String(str).replace(/[<>]/g,'');
+    }
+
+    const nameInput = $("#name"),
+          categorySelect = $("#category"),
+          btnReveal = $("#reveal"),
+          btnAgain = $("#again"),
+          btnCopy = $("#copy"),
+          btnTweet = $("#tweet"),
+          resultBox = $("#result"),
+          audioToggle = $("#audioToggle"),
+          ambienceAudio = document.getElementById("ambience");
+
+    function renderFate() {
+      const name = sanitize(nameInput.value.trim() || "Somebody");
+      const cat = categorySelect.value;
+      const fate = pickFate(cat);
+      const text = fate.text.replaceAll("{name}", name);
+      resultBox.innerHTML = `<strong>${name}:</strong><br><span class="fate-text">${text}</span><div class="tiny" style="margin-top:8px;color:#555">Theme: ${fate.category}</div>`;
+      btnReveal.style.display = "none";
+      btnAgain.style.display = "inline-block";
+    }
+
+    btnReveal.addEventListener("click", renderFate);
+    btnAgain.addEventListener("click", () => { renderFate(); nameInput.focus(); });
+    btnCopy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(resultBox.innerText.trim());
+        btnCopy.textContent = "Copied!";
+        setTimeout(() => btnCopy.textContent = "Copy", 1200);
+      } catch {
+        btnCopy.textContent = "Couldn’t copy";
+        setTimeout(() => btnCopy.textContent = "Copy", 1200);
+      }
+    });
+    btnTweet.addEventListener("click", () => {
+      const txt = encodeURIComponent(resultBox.innerText.trim() || "My spooky compliance fate!");
+      window.open(`https://twitter.com/intent/tweet?text=${txt}`, "_blank", "noopener");
+    });
+
+    // Audio toggle
+    let audioLoaded = false;
+    const audioSrc = "ambience.mp3";
+    fetch(audioSrc, { method: "HEAD" }).then(r => {
+      if (r.ok) { ambienceAudio.src = audioSrc; audioLoaded = true; }
+    }).catch(() => { /* no audio found */ });
+
+    audioToggle.addEventListener("click", async () => {
+      if (!audioLoaded) {
+        audioToggle.textContent = "No Audio Found";
+        setTimeout(() => audioToggle.textContent = "Play Ambience", 1400);
+        return;
+      }
+      if (ambienceAudio.paused) {
+        try {
+          await ambienceAudio.play();
+          audioToggle.textContent = "Pause Ambience";
+          audioToggle.setAttribute("aria-pressed", "true");
+        } catch {
+          audioToggle.textContent = "Tap to Enable Audio";
+          setTimeout(() => audioToggle.textContent = "Play Ambience", 1400);
+        }
+      } else {
+        ambienceAudio.pause();
+        audioToggle.textContent = "Play Ambience";
+        audioToggle.setAttribute("aria-pressed", "false");
+      }
+    });
+
+    nameInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") renderFate();
+    });
+
+    // Initial random render (optional)
+    setTimeout(() => {
+      if (!resultBox.innerText.trim()) renderFate();
+    }, 400);
+  </script>
 </body>
 </html>
