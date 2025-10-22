@@ -1,142 +1,129 @@
-<script>
-  // ===== Your Fates Array =====
-  const FATES = [
-    {category:"Office", text:"{name} broke the sacred code of confidentiality by forwarding a restricted file. They were last seen sinking into the Recycle Bin of Eternal NDA Violations."},
-    {category:"Security", text:"{name} shared their password like candy on Halloween. Two-Factor Authentication came for them personally — twice."},
-    {category:"Office", text:"{name} angered the printer spirits one jam too many. They were pressed, folded, and stapled into legend."},
-    {category:"Security", text:"{name} let security alerts pile up until the notifications formed a landslide. They were buried alive under unread warnings marked “High Severity.”"},
-    {category:"Office", text:"{name} took someone else’s lunch and met poetic justice. Their soul now guards the break-room fridge, dwelling with the mold."},
-    {category:"Office", text:"{name} never managed to arrive on time. The 9:00 a.m. meeting finally swallowed them whole at 9:07."},
-    {category:"Security", text:"{name} joined a coffee shop Wi-Fi with company data. Their spirit was uploaded — unencrypted — to the Cloud of Regret."},
-    {category:"Security", text:"{name} clicked the forbidden link. Now they wander the endless halls of “Mandatory Phishing Training.”"},
-    {category:"Security", text:"{name} bypassed code review to save time. The deployment gods rolled them back to Version 0.0.1."},
-    {category:"Security", text:"{name} left their laptop unlocked during lunch. IT sealed their fate — and their hard drive — with one keystroke."},
-    {category:"CPNI",    text:"{name} tossed confidential papers straight into the trash. The Great Office Shredder reclaimed what the bin could not."},
-    {category:"Security", text:"{name} installed forbidden apps on a work phone. The device exiled them to the eternal loading screen of Compliance Updates."},
-    {category:"Security", text:"{name} waved in a “visitor” without a badge. They now haunt the lobby, politely reminding everyone to sign in."},
-    {category:"Security", text:"{name} thought a sticky note made a fine password manager. That note became their headstone — and the Wi-Fi key was never found."},
-    {category:"Office",    text:"{name} hit “Reply All” with secrets meant for one. The servers wept, and the echo of that message still pings at midnight."},
-    {category:"Security", text:"{name} noticed a data breach… and said nothing. The silence consumed them, ticket #∞ left eternally “In Progress.”"},
-    {category:"Office",    text:"{name} skipped the approval chain to “save a few minutes.” They now rest beneath a granite slab engraved “Pending Supervisor Signature.”"},
-    {category:"Security", text:"{name} trusted a free cloud app with confidential files. The wind carried them away — synced, but never recovered."},
-    {category:"Office",    text:"{name} ghosted the annual compliance course. They were automatically re-enrolled… forever."},
-    {category:"Security", text:"{name} plugged in a mysterious USB drive labeled “Totally Safe.” They became the museum exhibit titled “Curiosity Killed the Server.”"},
-    {category:"CPNI",      text:"{name} discussed client secrets at lunch. Their whisper lives on as a post-it that hisses, “That’s confidential.”"},
-    {category:"OFAC",      text:"{name} tried to onboard a sanctioned entity without screening. They vanished into the Treasury’s most exclusive list — permanently."},
-    {category:"OFAC",      text:"{name} forgot to check the Denied Persons List before making a deal. Now they reside in a place even OFAC calls “restricted territory.”"},
-    {category:"CPNI",      text:"{name} disclosed customer call data without authorization. The ghost of CPNI appeared, whispering, “That information is privileged.”"},
-    {category:"CPNI",      text:"{name} left a list of customer phone records on the copier. Now they haunt the break room, eternally muttering, “Protect the CPNI.”"},
-    {category:"FCC",       text:"{name} shared confidential subscriber info over an unsecured channel. The FCC summoned them to the spectral hearing of “In re: Oops vs. The Public Interest.”"},
-    {category:"FCC",       text:"{name} failed to post a required FCC notice. They’re now tuned forever to static — channel “Compliance 404.”"},
-    {category:"FCC",       text:"{name} advertised unlimited service with very limited truth. The FCC fined their mortal coil and annexed their eternal bandwidth."},
-    {category:"FCC",       text:"{name} mishandled a lawful intercept request. Now they linger on hold, waiting for supervisory approval that never comes."},
-    {category:"FCC",       text:"{name} forgot to file a Form 477 report. They are now permanently classified as “non-responsive.”"},
-    {category:"FCC",       text:"{name} promised “nationwide coverage” that ended at the county line. Their spirit roams the dead zones between marketing and reality."},
-    {category:"Contract",  text:"{name} breached a vendor contract by “forgetting” to pay on time. The Accounts Payable Reaper collected — with interest."},
-    {category:"Contract",  text:"{name} failed to deliver per the service agreement. The epitaph reads, “Best Efforts Were Not Enough.”"},
-    {category:"Contract",  text:"{name} ignored the indemnity clause and learned negligence the hard way. They now serve as Exhibit A in every training about risk allocation."},
-    {category:"Contract",  text:"{name} promised performance “to the best of their ability.” Their ability filed for bankruptcy shortly thereafter."},
-    {category:"Contract",  text:"{name} accepted terms they never read. They’re now eternally bound by Section 9.2 — “Perpetual Obligations.”"},
-    {category:"Contract",  text:"{name} missed a renewal deadline. The contract auto-renewed their afterlife for another five years."},
-    {category:"Contract",  text:"{name} signed without legal review. Their ghost roams the office wailing, “Where was counsel?”"},
-    {category:"Contract",  text:"{name} redlined the wrong version of the agreement. Their soul is trapped between Track Changes and “Final-Final-v3.docx.”"},
-    {category:"Contract",  text:"{name} failed to deliver notice in writing. Their oral agreements echo faintly — admissible nowhere."}
-  ];
-
-  // === Utility & DOM Elements ===
-  const $ = selector => document.querySelector(selector);
-  const nameInput    = $("#name");
-  const btnReveal    = $("#reveal");
-  const btnAgain     = $("#again");
-  const btnCopy      = $("#copy");
-  const btnTweet     = $("#tweet");
-  const resultBox    = $("#result");
-  const audioToggle  = $("#audioToggle");
-  const ambience     = document.getElementById("ambience");
-
-  // Pick a random fate
-  function pickAnyFate() {
-    const idx = Math.floor(Math.random() * FATES.length);
-    return FATES[idx];
-  }
-
-  // Sanitize user input
-  function sanitize(str) {
-    return String(str).replace(/[<>]/g, '');
-  }
-
-  // Render fate
-  function renderFate() {
-    const name = sanitize(nameInput.value.trim() || "Somebody");
-    const fate = pickAnyFate();
-    const text = fate.text.replace(/{name}/g, name);  // use replace with regex for compatibility
-    resultBox.innerHTML = `
-      <strong>${name}:</strong><br>
-      <span class="fate-text">${text}</span>
-    `;
-    btnReveal.style.display = "none";
-    btnAgain.style.display  = "inline-block";
-  }
-
-  // Event listeners
-  btnReveal.addEventListener("click", renderFate);
-  btnAgain.addEventListener("click", () => {
-    renderFate();
-    nameInput.focus();
-  });
-
-  btnCopy.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(resultBox.innerText.trim());
-      btnCopy.textContent = "Copied!";
-      setTimeout(() => btnCopy.textContent = "Copy", 1200);
-    } catch {
-      btnCopy.textContent = "Error";
-      setTimeout(() => btnCopy.textContent = "Copy", 1200);
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Compliance Cemetery</title>
+  <style>
+    body {
+      margin:0;
+      padding:0;
+      background: #0b1220;
+      color: #eef3fb;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-  });
-
-  btnTweet.addEventListener("click", () => {
-    const txt = encodeURIComponent(resultBox.innerText.trim() || "My spooky compliance fate!");
-    window.open(`https://twitter.com/intent/tweet?text=${txt}`, "_blank", "noopener");
-  });
-
-  // Audio toggle logic
-  let audioLoaded = false;
-  const audioSrc = "ambience.mp3";
-  fetch(audioSrc, { method: "HEAD" }).then(r => {
-    if (r.ok) {
-      ambience.src = audioSrc;
-      audioLoaded = true;
+    .container {
+      background: #f3f6fb;
+      color: #0b1322;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
     }
-  }).catch(() => { /* no audio found */ });
-
-  audioToggle.addEventListener("click", async () => {
-    if (!audioLoaded) {
-      audioToggle.textContent = "No Audio Found";
-      setTimeout(() => audioToggle.textContent = "Play Ambience", 1400);
-      return;
+    input {
+      width: calc(100% - 22px);
+      padding: 10px;
+      margin-top:10px;
+      font-size: 1rem;
     }
-    if (ambience.paused) {
-      try {
-        await ambience.play();
-        audioToggle.textContent = "Pause Ambience";
-        audioToggle.setAttribute("aria-pressed", "true");
-      } catch {
-        audioToggle.textContent = "Enable Audio";
-        setTimeout(() => audioToggle.textContent = "Play Ambience", 1400);
+    button {
+      margin-top:10px;
+      padding:10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .result {
+      margin-top:20px;
+      background: #e4e7ed;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius:4px;
+      color: #0b1322;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>COMPLIANCE CEMETERY</h1>
+    <p>Enter your name to reveal your fate…</p>
+    <input id="name" type="text" placeholder="Your Name">
+    <br>
+    <button id="reveal">Reveal My Fate</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const FATES = [
+      "{name} broke the sacred code of confidentiality by forwarding a restricted file.",
+      "{name} shared their password like candy on Halloween. Two-Factor Authentication came for them personally — twice.",
+      "{name} angered the printer spirits one jam too many. They were pressed, folded, and stapled into legend.",
+      "{name} let security alerts pile up until the notifications formed a landslide. They were buried alive under unread warnings marked “High Severity.”",
+      "{name} took someone else’s lunch and met poetic justice. Their soul now guards the break-room fridge, dwelling with the mold.",
+      "{name} never managed to arrive on time. The 9:00 a.m. meeting finally swallowed them whole at 9:07.",
+      "{name} joined a coffee shop Wi-Fi with company data. Their spirit was uploaded — unencrypted — to the Cloud of Regret.",
+      "{name} clicked the forbidden link. Now they wander the endless halls of “Mandatory Phishing Training.”",
+      "{name} bypassed code review to save time. The deployment gods rolled them back to Version 0.0.1.",
+      "{name} left their laptop unlocked during lunch. IT sealed their fate — and their hard drive — with one keystroke.",
+      "{name} tossed confidential papers straight into the trash. The Great Office Shredder reclaimed what the bin could not.",
+      "{name} installed forbidden apps on a work phone. The device exiled them to the eternal loading screen of Compliance Updates.",
+      "{name} waved in a “visitor” without a badge. They now haunt the lobby, politely reminding everyone to sign in.",
+      "{name} thought a sticky note made a fine password manager. That note became their headstone — and the Wi-Fi key was never found.",
+      "{name} hit “Reply All” with secrets meant for one. The servers wept, and the echo of that message still pings at midnight.",
+      "{name} skipped the approval chain to “save a few minutes.” They now rest beneath a granite slab engraved “Pending Supervisor Signature.”",
+      "{name} trusted a free cloud app with confidential files. The wind carried them away — synced, but never recovered.",
+      "{name} ghosted the annual compliance course. They were automatically re-enrolled… forever.",
+      "{name} plugged in a mysterious USB drive labeled “Totally Safe.” They became the museum exhibit titled “Curiosity Killed the Server.”",
+      "{name} discussed client secrets at lunch. Their whisper lives on as a post-it that hisses, “That’s confidential.”",
+      "{name} tried to onboard a sanctioned entity without screening. They vanished into the Treasury’s most exclusive list — permanently.",
+      "{name} forgot to check the Denied Persons List before making a deal. Now they reside in a place even OFAC calls “restricted territory.”",
+      "{name} disclosed customer call data without authorization. The ghost of CPNI appeared, whispering, “That information is privileged.”",
+      "{name} left a list of customer phone records on the copier. Now they haunt the break room, eternally muttering, “Protect the CPNI.”",
+      "{name} shared confidential subscriber info over an unsecured channel. The FCC summoned them to the spectral hearing of “In re: Oops vs. The Public Interest.”",
+      "{name} failed to post a required FCC notice. They’re now tuned forever to static — channel “Compliance 404.”",
+      "{name} advertised unlimited service with very limited truth. The FCC fined their mortal coil and annexed their eternal bandwidth.",
+      "{name} mishandled a lawful intercept request. Now they linger on hold, waiting for supervisory approval that never comes.",
+      "{name} forgot to file a Form 477 report. They are now permanently classified as “non-responsive.”",
+      "{name} promised “nationwide coverage” that ended at the county line. Their spirit roams the dead zones between marketing and reality.",
+      "{name} breached a vendor contract by “forgetting” to pay on time. The Accounts Payable Reaper collected — with interest.",
+      "{name} failed to deliver per the service agreement. The epitaph reads, “Best Efforts Were Not Enough.”",
+      "{name} ignored the indemnity clause and learned negligence the hard way. They now serve as Exhibit A in every training about risk allocation.",
+      "{name} promised performance “to the best of their ability.” Their ability filed for bankruptcy shortly thereafter.",
+      "{name} accepted terms they never read. They’re now eternally bound by Section 9.2 — “Perpetual Obligations.”",
+      "{name} missed a renewal deadline. The contract auto-renewed their afterlife for another five years.",
+      "{name} signed without legal review. Their ghost roams the office wailing, “Where was counsel?”",
+      "{name} redlined the wrong version of the agreement. Their soul is trapped between Track Changes and “Final-Final-v3.docx.”",
+      "{name} failed to deliver notice in writing. Their oral agreements echo faintly — admissible nowhere."
+    ];
+
+    const nameInput = document.getElementById('name');
+    const btnReveal  = document.getElementById('reveal');
+    const resultBox = document.getElementById('result');
+
+    function pickFate() {
+      return FATES[Math.floor(Math.random() * FATES.length)];
+    }
+
+    function renderFate() {
+      const name = nameInput.value.trim() || "Somebody";
+      const text = pickFate().replace(/{name}/g, name);
+      resultBox.style.display = 'block';
+      resultBox.textContent = name + ": " + text;
+      btnReveal.textContent = "Change My Fate";
+    }
+
+    btnReveal.addEventListener('click', renderFate);
+    nameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        renderFate();
       }
-    } else {
-      ambience.pause();
-      audioToggle.textContent = "Play Ambience";
-      audioToggle.setAttribute("aria-pressed", "false");
-    }
-  });
-
-  // Allow Enter key to trigger reveal
-  nameInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      renderFate();
-    }
-  });
-</script>
+    });
+  </script>
+</body>
+</html>
