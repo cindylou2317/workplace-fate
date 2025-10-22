@@ -1,67 +1,77 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Compliance Cemetery</title>
   <style>
     body {
       margin:0;
       padding:0;
-      background: #0b1220;
-      color: #eef3fb;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, “Helvetica Neue”, Arial, sans-serif;
+      background:#0b1220;
+      color:#eef3fb;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
       display:flex;
       align-items:center;
       justify-content:center;
       height:100vh;
     }
     .container {
-      background: #f3f6fb;
-      color: #0b1322;
-      padding: 20px;
+      background:#f3f6fb;
+      color:#0b1322;
+      padding:20px;
       border-radius:8px;
       text-align:center;
       width:90%;
       max-width:400px;
     }
     h1 {
-      margin-top:0;
+      margin:0 0 12px 0;
+    }
+    input {
+      width:calc(100% - 24px);
+      padding:10px;
+      margin-top:10px;
+      font-size:1rem;
+      border-radius:4px;
+      border:1px solid #ccc;
     }
     button {
       margin-top:12px;
       padding:10px 20px;
       font-size:1rem;
       cursor:pointer;
+      border:none;
+      border-radius:4px;
+      background:#3b82f6;
+      color:white;
     }
-    input {
-      width: calc(100% - 24px);
-      padding:10px;
-      margin-top:10px;
-      font-size:1rem;
+    button.secondary {
+      background:#1f2937;
     }
     .result {
       margin-top:20px;
-      background: #e4e7ed;
+      background:#e4e7ed;
       padding:15px;
       font-weight:bold;
       font-size:1.1rem;
       border-radius:4px;
-      color: #0b1322;
+      color:#0b1322;
       display:none;
       text-align:left;
     }
     .audio-btn {
-      background:#3b82f6;
+      background:#2563eb;
       color:white;
       border:none;
       border-radius:4px;
       padding:8px 16px;
       font-size:0.95rem;
       cursor:pointer;
+      margin-bottom:16px;
     }
     .audio-btn:active {
-      transform:scale(0.97);
+      transform: scale(0.97);
     }
   </style>
 </head>
@@ -69,7 +79,7 @@
   <div class="container">
     <h1>COMPLIANCE CEMETERY</h1>
 
-    <!-- Audio play button under the heading -->
+    <!-- Audio player for recorded message -->
     <audio id="welcomeAudio" preload="auto">
       <source src="welcome-message.mp3" type="audio/mpeg">
       <source src="welcome-message.ogg" type="audio/ogg">
@@ -77,9 +87,8 @@
     </audio>
     <button id="playAudioBtn" class="audio-btn">Play Welcome Message</button>
 
-    <p style="margin-top:20px;">Enter your name to reveal your fate…</p>
-    <input id="name" type="text" placeholder="Your Name">
-
+    <p>Enter your name to reveal your fate…</p>
+    <input id="name" type="text" placeholder="Your Name" autocomplete="name">
     <br>
     <button id="reveal">Reveal My Fate</button>
 
@@ -129,11 +138,11 @@
       "{name} failed to deliver notice in writing. Their oral agreements echo faintly — admissible nowhere."
     ];
 
-    const nameInput  = document.getElementById('name');
-    const btnReveal  = document.getElementById('reveal');
-    const resultBox  = document.getElementById('result');
+    const nameInput    = document.getElementById('name');
+    const btnReveal    = document.getElementById('reveal');
+    const resultBox    = document.getElementById('result');
     const playAudioBtn = document.getElementById('playAudioBtn');
-    const welcomeAudio  = document.getElementById('welcomeAudio');
+    const welcomeAudio = document.getElementById('welcomeAudio');
 
     function pickFate() {
       const idx = Math.floor(Math.random() * FATES.length);
@@ -157,6 +166,7 @@
           playAudioBtn.textContent = "Pause Welcome Message";
         } catch(e) {
           console.error("Audio playback failed:", e);
+          playAudioBtn.textContent = "Play Welcome Message";
         }
       } else {
         welcomeAudio.pause();
