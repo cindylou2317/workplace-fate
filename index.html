@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Compliance Cemetery</title>
   <style>
     body {
@@ -10,52 +10,79 @@
       padding:0;
       background: #0b1220;
       color: #eef3fb;
-      font-family: sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, “Helvetica Neue”, Arial, sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
     }
     .container {
       background: #f3f6fb;
       color: #0b1322;
       padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
+      border-radius:8px;
+      text-align:center;
+      width:90%;
+      max-width:400px;
     }
-    input {
-      width: calc(100% - 22px);
-      padding: 10px;
-      margin-top:10px;
-      font-size: 1rem;
+    h1 {
+      margin-top:0;
     }
     button {
-      margin-top:10px;
+      margin-top:12px;
       padding:10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
+      font-size:1rem;
+      cursor:pointer;
+    }
+    input {
+      width: calc(100% - 24px);
+      padding:10px;
+      margin-top:10px;
+      font-size:1rem;
     }
     .result {
       margin-top:20px;
       background: #e4e7ed;
-      padding: 15px;
-      font-weight: bold;
-      font-size: 1.1rem;
+      padding:15px;
+      font-weight:bold;
+      font-size:1.1rem;
       border-radius:4px;
       color: #0b1322;
-      display: none;
+      display:none;
+      text-align:left;
+    }
+    .audio-btn {
+      background:#3b82f6;
+      color:white;
+      border:none;
+      border-radius:4px;
+      padding:8px 16px;
+      font-size:0.95rem;
+      cursor:pointer;
+    }
+    .audio-btn:active {
+      transform:scale(0.97);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>COMPLIANCE CEMETERY</h1>
-    <p>Enter your name to reveal your fate…</p>
+
+    <!-- Audio play button under the heading -->
+    <audio id="welcomeAudio" preload="auto">
+      <source src="welcome-message.mp3" type="audio/mpeg">
+      <source src="welcome-message.ogg" type="audio/ogg">
+      Your browser does not support audio playback.
+    </audio>
+    <button id="playAudioBtn" class="audio-btn">Play Welcome Message</button>
+
+    <p style="margin-top:20px;">Enter your name to reveal your fate…</p>
     <input id="name" type="text" placeholder="Your Name">
+
     <br>
     <button id="reveal">Reveal My Fate</button>
+
     <div id="result" class="result"></div>
   </div>
 
@@ -94,6 +121,7 @@
       "{name} breached a vendor contract by “forgetting” to pay on time. The Accounts Payable Reaper collected — with interest.",
       "{name} failed to deliver per the service agreement. The epitaph reads, “Best Efforts Were Not Enough.”",
       "{name} ignored the indemnity clause and learned negligence the hard way. They now serve as Exhibit A in every training about risk allocation.",
+      "{name} promised performance “to the best of their ability.” Their ability filed for bankruptcy shortly thereafter.",
       "{name} accepted terms they never read. They’re now eternally bound by Section 9.2 — “Perpetual Obligations.”",
       "{name} missed a renewal deadline. The contract auto-renewed their afterlife for another five years.",
       "{name} signed without legal review. Their ghost roams the office wailing, “Where was counsel?”",
@@ -101,12 +129,15 @@
       "{name} failed to deliver notice in writing. Their oral agreements echo faintly — admissible nowhere."
     ];
 
-    const nameInput = document.getElementById('name');
+    const nameInput  = document.getElementById('name');
     const btnReveal  = document.getElementById('reveal');
-    const resultBox = document.getElementById('result');
+    const resultBox  = document.getElementById('result');
+    const playAudioBtn = document.getElementById('playAudioBtn');
+    const welcomeAudio  = document.getElementById('welcomeAudio');
 
     function pickFate() {
-      return FATES[Math.floor(Math.random() * FATES.length)];
+      const idx = Math.floor(Math.random() * FATES.length);
+      return FATES[idx];
     }
 
     function renderFate() {
@@ -118,6 +149,21 @@
     }
 
     btnReveal.addEventListener('click', renderFate);
+
+    playAudioBtn.addEventListener('click', async () => {
+      if (welcomeAudio.paused) {
+        try {
+          await welcomeAudio.play();
+          playAudioBtn.textContent = "Pause Welcome Message";
+        } catch(e) {
+          console.error("Audio playback failed:", e);
+        }
+      } else {
+        welcomeAudio.pause();
+        playAudioBtn.textContent = "Play Welcome Message";
+      }
+    });
+
     nameInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         renderFate();
